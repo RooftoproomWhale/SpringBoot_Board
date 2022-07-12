@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Boot App</title>
+</head>
+<body>
+    <h1>My First Spring Boot App</h1>
+    
+    <!-- thymeleaf 템플릿 엔진이 Model 객체의 속성(attribute)를 분석 -->
+    <div th:if="${userName}">
+        <h2 th:text="|hello, ${userName}!|">Hello</h2>
+    </div>
+</body>
+</html>

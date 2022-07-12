@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<title>Boot App</title>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+    <h1>My Spring Boot App</h1>
+    <h2>수정 페이지</h2>
+</div>
+
+<nav>
+    <a class="btn btn-secondary" th:href="@{/}">Home</a>
+</nav>
+
+<div>
+    <form>
+        <div class="form-group">
+            <lable for="id">번호</lable>
+            <input class="form-control" type="text" id="id"
+                th:value="${post.id}" readonly/>
+        </div>
+        <div class="form-group">
+            <lable for="title">제목</lable>
+            <input class="form-control" type="text" id="title"
+                th:value="${post.title}"/>
+        </div>
+        <div class="form-group">
+            <lable for="content">본문</lable>
+            <textarea class="form-control" id="content"
+                th:text="${post.content}"></textarea>
+        </div>
+        <div class="form-group">
+            <lable for="author">작성자</lable>
+            <input class="form-control" type="text" id="author"
+                th:value="${post.author}" readonly/>
+        </div>
+    </form>
+</div>
+<div>
+    <a th:href="@{/read/{id}(id=${post.id})}" class="btn btn-secondary">취소</a>
+    <a id="btnDelete" class="btn btn-danger">삭제</a>
+    <a id="btnUpdate" class="btn btn-success">수정 완료</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+    //  id="btnDelete"인 버튼이 클릭됐을 때 실행될 이벤트 핸들러를 등록.
+        $('#btnDelete').click(function() {
+            const id = $('#id').val();  // id="id"인 요소의 값을 읽어옴.
+            const result = confirm('#' + id + ' 포스트를 정말 삭제할까요?');
+            if(result) // 사용자가 confirm창의 "확인(OK)"를 클릭했으면
+            {
+                $.ajax({
+	                type: 'DELETE',
+	                url: '/api/posts/'+ id,
+	                dataType: 'json',
+	                contentType: 'application/json; charset=utf-8',
+	                success: function(data) {
+	                    alert('#' + id + ' 포스트가 정상적으로 삭제됐습니다.');
+	                    location.href = '/';
+	                    console.log(data);
+	                }, 
+	                error: function(err) {
+	                    alert(JSON.stringify(err));
+	                }, 
+	            });
+            }
+        });
+    //  id="btnUpdate"인 버튼이 클릭됐을 때 실행될 이벤트 핸들러를 등록.
+        $('#btnUpdate').click(function() {
+            const id = $('#id').val();
+            const data = {
+                title: $('#title').val(),
+                content: $('#content').val(),
+            };
+            console.log(data);
+            
+            $.ajax({
+                type: 'PUT',
+                url: '/api/posts/' + id,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data),
+                success: function(result) {
+                    alert(result + ' 글 수정 성공!');
+                    location.href = '/read/' + id;
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err));
+                },
+            });
+        });
+    });
+</script>
+</body>
+</html>

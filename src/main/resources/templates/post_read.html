@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<title>Boot App</title>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+    <h1>My Spring Boot App</h1>
+    <h2>상세 보기 페이지</h2>
+</div>
+
+<nav>
+    <a class="btn btn-secondary" th:href="@{/}">Home</a>
+    <a class="btn btn-secondary" th:href="@{/update/{id}(id=${post.id})}">수정하기</a>
+</nav>
+
+<div>
+    <form>
+        <div class="form-group">
+            <lable for="id">번호</lable>
+            <input class="form-control" type="text" id="id"
+                th:value="${post.id}" readonly/>
+        </div>
+        <div class="form-group">
+            <lable for="title">제목</lable>
+            <input class="form-control" type="text" id="title"
+                th:value="${post.title}" readonly/>
+        </div>
+        <div class="form-group">
+            <lable for="content">본문</lable>
+            <textarea class="form-control" id="content"
+                th:text="${post.content}" readonly></textarea>
+        </div>
+        <div class="form-group">
+            <lable for="author">작성자</lable>
+            <input class="form-control" type="text" id="author"
+                th:value="${post.author}" readonly/>
+        </div>
+        <div class="form-group">
+            <lable for="modifiedDate">수정날짜</lable>
+            <input class="form-control" type="text" id="modifiedDate"
+                th:value="${post.modifiedDate}" readonly/>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
