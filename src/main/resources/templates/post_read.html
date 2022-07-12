@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,8 +15,17 @@
 </div>
 
 <nav>
-    <a class="btn btn-secondary" th:href="@{/}">Home</a>
-    <a class="btn btn-secondary" th:href="@{/update/{id}(id=${post.id})}">수정하기</a>
+    <div sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>님,
+        <a class="btn btn-light" th:href="@{/logout}">로그아웃</a>
+    </div>
+    <div>
+	    <a class="btn btn-info" th:href="@{/}">Home</a>
+	    <!-- 로그인 username과 작성자(author)가 같은 경우에만 수정하기 보여주기 -->
+	    <span th:if="${#authentication.name} == ${post.author}">
+	       <a class="btn btn-info" th:href="@{/update/{id}(id=${post.id})}">수정하기</a>
+	    </span>
+    </div>
 </nav>
 
 <div>

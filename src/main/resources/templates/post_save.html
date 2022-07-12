@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +14,14 @@
 </div>
 
 <nav> <!-- TODO: navigation menu를 추가하기 위해서-->
-    <a th:href="@{/}" class="btn btn-secondary">Home</a>
+    <!-- 로그아웃 버튼 보여주기 -->
+    <div sec:authorize="isAuthenticated()">
+        <span sec:authentication="name"></span>님,
+        <a class="btn btn-light" th:href="@{/logout}">로그아웃</a>
+    </div>
+    <div>
+        <a th:href="@{/}" class="btn btn-secondary">Home</a>
+    </div>
 </nav>
 
 <form>
@@ -27,7 +35,9 @@
     </div>
     <div class="form-group">
         <label for="author" th:text="Author"></label>
-        <input class="form-control" id="author" name="author"></textarea>
+        <!-- 로그인한 사용자 이름(username)을 자동으로 채우고 읽기 전용(편집 불가)로 만듦. -->
+        <input class="form-control" id="author" name="author"
+            th:value="${#authentication.name}" readonly/>
     </div>
 </form>
 <div>
@@ -50,21 +60,29 @@
             };
             console.log(data); // 브라우저 콘솔에 data 내용을 출력
             
-            // 웹 서버로 data를 Ajax 방식으로 전송.
-            $.ajax({
-                type: 'POST', // 요청 방식(request method)
-                url: '/api/posts', // 요청 주소(request url)
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(data), // Ajax 요청으로 보낼 데이터
-                success: function(result) {
-                    alert(result + ' 새 글 작성 성공!');
-                    location.href = '/';
-                }, // 성공 응답(HTTP 200)이 왔을 때 실행할 콜백.
-                error: function(err) {
-                    alert(JSON.stringify(err));
-                }, // 실패 응답이 왔을 때 실행할 콜백.
-            });
+            // TODO: title, content에 문자열이 입력됐는지 체크하고 입력된 경우에만 ajax 요청
+            if(data.title.length > 0 && data.content.length > 0)
+            {
+                // 웹 서버로 data를 Ajax 방식으로 전송.
+	            $.ajax({
+	                type: 'POST', // 요청 방식(request method)
+	                url: '/api/posts', // 요청 주소(request url)
+	                dataType: 'json',
+	                contentType: 'application/json; charset=utf-8',
+	                data: JSON.stringify(data), // Ajax 요청으로 보낼 데이터
+	                success: function(result) {
+	                    alert(result + ' 새 글 작성 성공!');
+	                    location.href = '/';
+	                }, // 성공 응답(HTTP 200)이 왔을 때 실행할 콜백.
+	                error: function(err) {
+	                    alert(JSON.stringify(err));
+	                }, // 실패 응답이 왔을 때 실행할 콜백.
+	            });
+            }
+            else
+            {
+                alert("제목과 내용을 입력해주세요.");
+            }
         });
     });
 </script>
